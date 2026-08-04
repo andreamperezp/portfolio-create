@@ -1,254 +1,195 @@
-/* ============================================================
-   AndreaOS — Lógica del escritorio
-   ============================================================ */
-(function () {
-  "use strict";
-  const D = window.ANDREA;
-  const $ = (s, r = document) => r.querySelector(s);
-  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+<div align="center">
 
-  /* ---------- BOOT ---------- */
-  function boot() {
-    const b = $("#boot");
-    const desk = $("#desktop");
-    setTimeout(() => {
-      b.classList.add("is-hidden");
-      desk.classList.add("is-on");
-      desk.setAttribute("aria-hidden", "false");
-    }, 2000);
-    // Auto-abrir la ventana "Acerca de" como bienvenida
-    setTimeout(() => openWindow("acerca"), 2700);
-  }
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:8b7bff,50:6f7bff,100:4fd6c9&height=220&section=header&text=AndreaOS&fontColor=ffffff&fontSize=70&fontAlignY=38&desc=Portfolio%20interactivo%20%C2%B7%20Product%20Designer&descAlignY=60&descSize=18" width="100%" alt="AndreaOS"/>
 
-  /* ---------- CLOCK ---------- */
-  function tickClock() {
-    const el = $("#clock");
-    const now = new Date();
-    const opts = { weekday: "short", hour: "2-digit", minute: "2-digit" };
-    el.textContent = now
-      .toLocaleString("es-AR", opts)
-      .replace(".", "")
-      .replace(/^\w/, (c) => c.toUpperCase());
-  }
+<a href="https://readme-typing-svg.demolab.com">
+  <img src="https://readme-typing-svg.demolab.com?font=Inter&weight=600&size=24&pause=1000&color=8B7BFF&center=true&vCenter=true&width=650&height=44&lines=No+hago+cosas+incre%C3%ADbles.+Solo+optimizo+procesos.;Un+portfolio+que+se+usa+como+un+sistema+operativo.;Todo+tu+perfil+a+un+clic." alt="Typing SVG"/>
+</a>
 
-  /* ---------- WINDOW MANAGER ---------- */
-  const WIN = {
-    acerca:      { title: "Acerca de Andrea", tpl: "tpl-acerca",      w: 560, h: 560, build: buildAbout },
-    experiencia: { title: "Experiencia — Trayectoria", tpl: "tpl-experiencia", w: 620, h: 560, build: buildTimeline },
-    notas:       { title: "Notas — Léeme", tpl: "tpl-notas",          w: 640, h: 480, build: buildNotes },
-    contacto:    { title: "Contacto", tpl: "tpl-contacto",            w: 520, h: 420, build: buildContact },
-  };
+<br/><br/>
 
-  let zTop = 100;
-  const openWins = new Map();
+<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"/>
+<img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"/>
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"/>
+<img src="https://img.shields.io/badge/Sin_dependencias-4fd6c9?style=for-the-badge" alt="Zero deps"/>
+<img src="https://img.shields.io/badge/Sin_build-8b7bff?style=for-the-badge" alt="No build"/>
 
-  function openWindow(key) {
-    const cfg = WIN[key];
-    if (!cfg) return;
-    if (openWins.has(key)) { focusWindow(key); return; }
+<br/><br/>
 
-    const win = document.createElement("section");
-    win.className = "window is-front";
-    win.dataset.key = key;
-    win.style.width = cfg.w + "px";
-    win.style.height = cfg.h + "px";
+<a href="https://andreamperezp.github.io/portfolio-create/">
+  <img src="https://img.shields.io/badge/🚀_Ver_demo_en_vivo-8B7BFF?style=for-the-badge" alt="Demo"/>
+</a>
+<a href="https://linkedin.com/in/andreamariange">
+  <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
+</a>
+<a href="assets/CV_Andrea_Perez.pdf">
+  <img src="https://img.shields.io/badge/📄_Descargar_CV-E03C3C?style=for-the-badge" alt="CV"/>
+</a>
 
-    // Cascade / center position
-    const idx = openWins.size;
-    const cx = Math.max(20, (window.innerWidth - cfg.w) / 2 + idx * 28 - 40);
-    const cy = Math.max(48, (window.innerHeight - cfg.h) / 2 + idx * 24 - 30);
-    win.style.left = cx + "px";
-    win.style.top = cy + "px";
-    win.style.zIndex = ++zTop;
+</div>
 
-    win.innerHTML = `
-      <div class="window__bar">
-        <div class="traffic">
-          <span class="c" data-act="close"></span>
-          <span class="m" data-act="min"></span>
-          <span class="g"></span>
-        </div>
-        <span class="window__title">${cfg.title}</span>
-      </div>
-      <div class="window__body"></div>`;
+<br/>
 
-    const body = $(".window__body", win);
-    const tpl = $("#" + cfg.tpl);
-    body.appendChild(tpl.content.cloneNode(true));
+---
 
-    $("#windows").appendChild(win);
-    openWins.set(key, win);
-    cfg.build(body);
-    focusWindow(key);
-    markDock();
+## 🖥️ ¿Qué es esto?
 
-    // Interactions
-    makeDraggable(win);
-    $(".traffic .c", win).addEventListener("click", () => closeWindow(key));
-    $(".traffic .m", win).addEventListener("click", () => minWindow(key));
-    win.addEventListener("mousedown", () => focusWindow(key));
-  }
+**AndreaOS** no es un portfolio que se *lee* — es uno que se **usa**. En vez de una página que
+scrolleás, entrás a un **escritorio interactivo** inspirado en un sistema operativo: abrís
+ventanas, las arrastrás, explorás una app de **Notas** con lo mejor de mi perfil y accedés a todo
+—LinkedIn, GitHub, web, CV— desde un **dock**. Todo con un fondo *aurora* animado y estética
+*glassmorphism / frost*.
 
-  function focusWindow(key) {
-    const win = openWins.get(key);
-    if (!win) return;
-    win.style.zIndex = ++zTop;
-    openWins.forEach((w) => w.classList.remove("is-front"));
-    win.classList.add("is-front");
-  }
+> 🪶 **Sin librerías, sin frameworks, sin build, sin 3D.** Solo HTML + CSS + JavaScript vanilla.
 
-  function closeWindow(key) {
-    const win = openWins.get(key);
-    if (!win) return;
-    win.classList.add("is-closing");
-    setTimeout(() => { win.remove(); openWins.delete(key); markDock(); }, 240);
-  }
+<br/>
 
-  function minWindow(key) {
-    const win = openWins.get(key);
-    if (!win) return;
-    win.classList.add("is-min");
-    setTimeout(() => { win.remove(); openWins.delete(key); markDock(); }, 340);
-  }
+## ✨ Características
 
-  function markDock() {
-    $$(".dock__app[data-open]").forEach((a) => {
-      a.classList.toggle("is-running", openWins.has(a.dataset.open));
-    });
-  }
+<table>
+<tr>
+<td width="50%" valign="top">
 
-  /* ---------- DRAG ---------- */
-  function makeDraggable(win) {
-    const bar = $(".window__bar", win);
-    let sx, sy, ox, oy, dragging = false;
-    bar.addEventListener("mousedown", (e) => {
-      if (e.target.closest(".traffic")) return;
-      dragging = true;
-      sx = e.clientX; sy = e.clientY;
-      ox = win.offsetLeft; oy = win.offsetTop;
-      document.body.style.userSelect = "none";
-    });
-    window.addEventListener("mousemove", (e) => {
-      if (!dragging) return;
-      let nx = ox + e.clientX - sx;
-      let ny = Math.max(36, oy + e.clientY - sy); // no tapar la menubar
-      win.style.left = nx + "px";
-      win.style.top = ny + "px";
-    });
-    window.addEventListener("mouseup", () => { dragging = false; document.body.style.userSelect = ""; });
-  }
+**🎬 Experiencia**
+- Pantalla de **boot** animada → escritorio
+- Fondo **aurora** con blobs en movimiento
+- **Menu bar** con reloj en vivo y estado *"Disponible"*
+- Efecto **glass / frost** en todo el sistema
 
-  /* ---------- CONTENT BUILDERS ---------- */
-  function buildAbout(body) {
-    const chips = $("[data-chips]", body);
-    D.keywords.forEach((k) => {
-      const c = document.createElement("span");
-      c.className = "chip";
-      c.textContent = k;
-      chips.appendChild(c);
-    });
-  }
+</td>
+<td width="50%" valign="top">
 
-  function buildTimeline(body) {
-    const wrap = $("[data-timeline]", body);
-    D.experience.forEach((job) => {
-      const item = document.createElement("div");
-      item.className = "tl-item" + (job.current ? " is-current" : "");
-      item.innerHTML = `
-        <div class="tl-head">
-          <div class="tl-role">${job.role} <span class="tl-company">· ${job.company}</span>
-            ${job.current ? '<span class="tl-badge">Actual</span>' : ""}</div>
-          <div class="tl-period">${job.period}</div>
-        </div>
-        <div class="tl-place">${job.place}</div>
-        <ul class="tl-bullets">${job.bullets.map((b) => `<li>${b}</li>`).join("")}</ul>`;
-      wrap.appendChild(item);
-    });
-  }
+**🪟 Interacción real**
+- Ventanas que **abren, arrastran, enfocan y cierran**
+- Botones tipo **semáforo** (rojo/amarillo/verde)
+- **Dock** con magnificación e indicador de app activa
+- App de **Notas**: Perfil / Logros / Competencias
 
-  function buildNotes(body) {
-    const sidebar = body;
-    const notesBody = $("[data-note-body]", body);
-    const today = new Date().toLocaleDateString("es-AR");
+</td>
+</tr>
+</table>
 
-    const views = {
-      perfil: () => `
-        <div class="note-date">${today} · Perfil</div>
-        <h3>Quién soy</h3>
-        <p>Soy <b>${D.meta.name}</b>, ${D.meta.role.toLowerCase()}.</p>
-        <p>Con más de <b>5 años</b> liderando equipos multidisciplinarios de diseño, desarrollo y
-        producto, alineo la estrategia de negocio con la experiencia del usuario. Optimizo procesos
-        con metodologías ágiles e integración de agentes de IA para maximizar la eficiencia y reducir
-        tiempos de entrega.</p>
-        <p style="font-style:italic;color:var(--teal)">"${D.meta.tagline}"</p>`,
-      destacados: () => `
-        <div class="note-date">${today} · Logros destacados</div>
-        <h3>Lo destacado</h3>
-        <ul>${D.highlights.map((h) => `<li>${h}</li>`).join("")}</ul>`,
-      skills: () => `
-        <div class="note-date">${today} · Competencias clave</div>
-        <h3>Competencias</h3>
-        <ul>${D.skills.map((s) => `<li><b>${s.label}:</b> ${s.detail}</li>`).join("")}</ul>`,
-    };
+<br/>
 
-    function show(note) {
-      notesBody.innerHTML = views[note]();
-      $$(".notes__item", sidebar).forEach((i) =>
-        i.classList.toggle("is-active", i.dataset.note === note));
-    }
+## 🏗️ Cómo funciona por dentro
 
-    $$(".notes__item[data-note]", sidebar).forEach((item) =>
-      item.addEventListener("click", () => show(item.dataset.note)));
-    show("perfil");
-  }
+El corazón es un **gestor de ventanas** liviano: cada app es un template HTML que se clona,
+se vuelve una ventana arrastrable con su propio `z-index`, y se llena con contenido generado
+desde un único archivo de datos.
 
-  function buildContact(body) {
-    const grid = $("[data-contact]", body);
-    const cards = [
-      { i: "✉", t: "Email", s: D.meta.email, href: "mailto:" + D.meta.email },
-      { i: "in", t: "LinkedIn", s: "andreamariange", href: D.meta.linkedin },
-      { i: "◍", t: "Web", s: "andreaperez.dev", href: D.meta.web },
-      { i: "☎", t: "Teléfono", s: D.meta.phone, href: "tel:" + D.meta.phone.replace(/\s/g, "") },
-    ];
-    cards.forEach((c) => {
-      const a = document.createElement("a");
-      a.className = "contact__card";
-      a.href = c.href;
-      if (c.href.startsWith("http")) { a.target = "_blank"; a.rel = "noopener"; }
-      a.innerHTML = `<span class="ci">${c.i}</span><span><small>${c.t}</small><strong>${c.s}</strong></span>`;
-      grid.appendChild(a);
-    });
-  }
+```mermaid
+flowchart LR
+    A([Boot screen]) --> B[Escritorio + Aurora]
+    B --> C{Clic en Dock<br/>o Menu bar}
+    C -->|openWindow| D[Clona template]
+    D --> E[Ventana arrastrable<br/>z-index + foco]
+    E --> F[[data.js<br/>tu contenido]]
+    F --> G[Acerca de]
+    F --> H[Experiencia]
+    F --> I[Notas]
+    F --> J[Contacto]
+    style A fill:#8b7bff,stroke:#fff,color:#fff
+    style F fill:#4fd6c9,stroke:#fff,color:#0b0d1a
+    style B fill:#181a2d,stroke:#8b7bff,color:#fff
+```
 
-  /* ---------- CV DOWNLOAD ---------- */
-  function downloadCV() {
-    const a = document.createElement("a");
-    a.href = D.meta.cv;
-    a.download = "CV_Andrea_Perez.pdf";
-    a.target = "_blank";
-    a.click();
-  }
+<br/>
 
-  /* ---------- GLOBAL EVENTS ---------- */
-  function wire() {
-    document.addEventListener("click", (e) => {
-      const opener = e.target.closest("[data-open]");
-      if (opener) { openWindow(opener.dataset.open); return; }
-      const dl = e.target.closest("[data-download]");
-      if (dl) { downloadCV(); }
-    });
-    // Cerrar ventana enfocada con Escape
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        const front = [...openWins.entries()].find(([, w]) => w.classList.contains("is-front"));
-        if (front) closeWindow(front[0]);
-      }
-    });
-  }
+## 🗂️ Estructura del proyecto
 
-  /* ---------- INIT ---------- */
-  tickClock();
-  setInterval(tickClock, 15000);
-  wire();
-  boot();
-})();
+<details>
+<summary><b>📁 Click para ver el árbol de archivos</b></summary>
+
+```
+portfolio-create/
+├── index.html          # Estructura + templates de cada ventana
+├── css/
+│   └── style.css       # Aurora, glass, dock, ventanas, animaciones
+├── js/
+│   ├── data.js         # ⬅️ TODO tu contenido vive acá (editá esto)
+│   └── main.js         # Window manager · dock · boot · reloj
+└── assets/
+    ├── favicon.svg
+    └── CV_Andrea_Perez.pdf
+```
+
+</details>
+
+<br/>
+
+## ✏️ Personalizarlo
+
+<details>
+<summary><b>💡 Click: cómo cambiar el contenido sin tocar código</b></summary>
+
+<br/>
+
+Todo el texto —perfil, experiencia, skills, logros, contacto y links— vive en un solo lugar:
+[`js/data.js`](js/data.js). No hace falta tocar el HTML.
+
+```js
+window.ANDREA = {
+  meta: {
+    name: "Andrea Pérez",
+    role: "Directora de Producto y Tecnología",
+    tagline: "No hago cosas increíbles. Solo optimizo procesos.",
+    // ...email, linkedin, web, cv
+  },
+  experience: [ /* tus trabajos */ ],
+  skills:     [ /* tus competencias */ ],
+  highlights: [ /* tus logros */ ],
+};
+```
+
+Cambiás los valores, guardás, recargás. Listo. 🪄
+
+</details>
+
+<br/>
+
+## ▶️ Correrlo localmente
+
+<details>
+<summary><b>🖥️ Click para ver cómo</b></summary>
+
+<br/>
+
+Abrí `index.html` directamente en el navegador, o serví la carpeta:
+
+```bash
+npx serve .
+```
+
+</details>
+
+<br/>
+
+## 🚀 Deploy
+
+Es un sitio **100% estático**, se publica solo:
+
+| Plataforma | Cómo |
+|------------|------|
+| **GitHub Pages** | Settings → Pages → Branch `main` / `root` → Save |
+| **Vercel** | Import repo → deploy (sin configuración) |
+| **Netlify** | Arrastrá la carpeta a netlify.com/drop |
+
+Activo en GitHub Pages queda en: **`https://andreamperezp.github.io/portfolio-create/`**
+
+<br/>
+
+---
+
+<div align="center">
+
+### 💜 Hecho con dedicación
+
+*"No hago cosas increíbles. Solo optimizo procesos."*
+
+<a href="https://linkedin.com/in/andreamariange">LinkedIn</a> ·
+<a href="https://github.com/andreamperezp">GitHub</a> ·
+<a href="assets/CV_Andrea_Perez.pdf">CV</a>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:4fd6c9,100:8b7bff&height=100&section=footer" width="100%" alt=""/>
+
+</div>
