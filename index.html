@@ -1,98 +1,184 @@
-/* ============================================================
-   AndreaOS — Contenido del portfolio (extraído del CV real)
-   Editá este archivo para actualizar tu información.
-   ============================================================ */
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Andrea Pérez — AndreaOS</title>
+  <meta name="description" content="Portfolio de Andrea Pérez, Product Designer. Un escritorio interactivo con todo a un clic." />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
 
-window.ANDREA = {
-  meta: {
-    name: "Andrea Pérez",
-    role: "Product Designer · Product Manager · Project Manager",
-    tagline: "No hago cosas increíbles. Solo optimizo procesos.",
-    location: "La Plata, Buenos Aires, Argentina",
-    phone: "+54 9 221 351 2482",
-    email: "andreamperezp31@gmail.com",
-    web: "https://andreaperez.dev",
-    linkedin: "https://linkedin.com/in/andreamariange",
-    cv: "assets/CV_Andrea_Perez.pdf"
-  },
+  <!-- ===== BOOT SCREEN ===== -->
+  <div id="boot" class="boot">
+    <div class="boot__logo">
+      <svg viewBox="0 0 100 100" width="72" height="72" aria-hidden="true">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="url(#g)" stroke-width="3"/>
+        <path d="M32 66 L50 30 L68 66 M40 54 H60" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#8b7bff"/>
+            <stop offset="1" stop-color="#4fd6c9"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="boot__name">AndreaOS</div>
+    <div class="boot__bar"><span></span></div>
+    <div class="boot__hint">Iniciando el escritorio de Andrea Pérez…</div>
+  </div>
 
-  // Chips de palabras clave (Acerca de mí)
-  keywords: [
-    "Gestión de equipos", "Scrum", "Liderazgo Ágil", "Product Management",
-    "Project Management", "UX/UI", "Transformación digital",
-    "Automatización con IA", "Optimización de procesos"
-  ],
+  <!-- ===== DESKTOP ===== -->
+  <main id="desktop" class="desktop" aria-hidden="true">
 
-  // Experiencia laboral -> Timeline
-  experience: [
-    {
-      role: "Directora de Producto y Tecnología",
-      company: "Delsud",
-      place: "Argentina",
-      period: "may. 2025 – Actualidad",
-      current: true,
-      bullets: [
-        "Lidero un equipo multidisciplinario de diseñadores, desarrolladores y product managers bajo metodologías ágiles.",
-        "Defino la estrategia de producto y tecnología, asegurando su alineación con los objetivos de negocio.",
-        "Implemento indicadores de productividad y calidad para impulsar la mejora continua del área.",
-        "Incorporo agentes de IA y herramientas de automatización para optimizar procesos y acortar los tiempos de entrega."
-      ]
-    },
-    {
-      role: "Project Manager",
-      company: "LIMBO",
-      place: "Argentina",
-      period: "ene. 2022 – may. 2025",
-      bullets: [
-        "Dirigí proyectos digitales de principio a fin aplicando Scrum y Design Thinking.",
-        "Coordiné equipos de diseño, desarrollo y QA, incrementando la eficiencia operativa del área.",
-        "Gestioné la comunicación con clientes y stakeholders, asegurando la entrega de soluciones de alto valor."
-      ]
-    },
-    {
-      role: "Diseñadora Web y Desarrolladora Frontend",
-      company: "Albanghu",
-      place: "Remoto",
-      period: "jun. 2024 – jul. 2024",
-      bullets: [
-        "Diseñé y desarrollé una landing page estratégica que reforzó la identidad visual de la empresa.",
-        "Personalicé un sistema en Bootstrap para optimizar la escalabilidad del producto digital."
-      ]
-    },
-    {
-      role: "UX/UI Designer Senior",
-      company: "iMCreate LLC",
-      place: "Nueva York, EE. UU. · Remoto",
-      period: "2020 – 2022",
-      bullets: [
-        "Lideré proyectos internacionales con enfoque en diseño centrado en el usuario.",
-        "Supervisé equipos de diseño y desarrollo, mejorando la usabilidad de los productos digitales."
-      ]
-    }
-  ],
+    <!-- Aurora wallpaper layers -->
+    <div class="aurora">
+      <span class="aurora__blob b1"></span>
+      <span class="aurora__blob b2"></span>
+      <span class="aurora__blob b3"></span>
+      <span class="aurora__grain"></span>
+    </div>
 
-  // Competencias clave
-  skills: [
-    { label: "Gestión de equipos", detail: "Liderazgo multidisciplinario, mentoring, gestión ágil." },
-    { label: "Metodologías ágiles", detail: "Scrum, Kanban, Design Thinking, Lean UX." },
-    { label: "Dirección de producto", detail: "Estrategia, roadmap, análisis de KPIs." },
-    { label: "UX/UI", detail: "Wireframes, prototipos, diseño visual, design systems." },
-    { label: "IA & automatización", detail: "Agentes de IA, optimización de procesos, eficiencia." },
-    { label: "Herramientas", detail: "Jira, Trello, Notion, Figma, Adobe XD, GitHub." }
-  ],
+    <!-- Menu bar -->
+    <header class="menubar glass">
+      <div class="menubar__left">
+        <button class="menubar__logo" data-open="acerca" title="Acerca de Andrea">
+          <svg viewBox="0 0 100 100" width="16" height="16" aria-hidden="true">
+            <path d="M32 66 L50 30 L68 66 M40 54 H60" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <strong>Andrea Pérez</strong>
+        <span class="menubar__item" data-open="acerca">Acerca de</span>
+        <span class="menubar__item" data-open="experiencia">Experiencia</span>
+        <span class="menubar__item" data-open="notas">Notas</span>
+        <span class="menubar__item" data-open="contacto">Contacto</span>
+      </div>
+      <div class="menubar__right">
+        <span class="menubar__status" title="Disponible para proyectos">
+          <span class="dot"></span> Disponible
+        </span>
+        <span id="clock" class="menubar__clock">--:--</span>
+      </div>
+    </header>
 
-  // Logros destacados (Notas)
-  highlights: [
-    "Implementación de sistemas de diseño que mejoraron la eficiencia de los equipos.",
-    "Dirección de proyectos internacionales con resultados medibles en usabilidad.",
-    "Liderazgo en proyectos de transformación digital, optimizando procesos internos y potenciando la experiencia del cliente."
-  ],
+    <!-- Desktop hint -->
+    <div class="desk-hint">
+      <p>Bienvenida a <strong>AndreaOS</strong> — hacé clic en los íconos del dock o del escritorio.</p>
+    </div>
 
-  // Formación
-  education: [
-    "Licenciatura en Diseño en Comunicación Visual (en curso) — UNLP",
-    "Tecnología para Gerentes y Directores — Platzi (2025)",
-    "Liderazgo para Equipos de Trabajo — Platzi (2023)",
-    "Diseño UX/UI, Sistemas de Diseño, Adobe XD y Fundamentos de Apps — Platzi"
-  ]
-};
+    <!-- Desktop icons -->
+    <div class="desk-icons">
+      <button class="desk-icon" data-open="notas">
+        <span class="desk-icon__img icon-notes"></span>
+        <span class="desk-icon__label">Léeme.txt</span>
+      </button>
+      <button class="desk-icon" data-download>
+        <span class="desk-icon__img icon-pdf"></span>
+        <span class="desk-icon__label">CV_Andrea.pdf</span>
+      </button>
+    </div>
+
+    <!-- ===== WINDOWS ===== -->
+    <div id="windows" class="windows-layer"></div>
+
+    <!-- Templates for window content -->
+    <template id="tpl-acerca">
+      <div class="about">
+        <div class="about__hero">
+          <div class="about__avatar">AP</div>
+          <div>
+            <h1>Andrea Pérez</h1>
+            <p class="about__role">Product Designer · Product Manager · Project Manager</p>
+            <p class="about__tag">“No hago cosas increíbles. Solo optimizo procesos.”</p>
+          </div>
+        </div>
+        <p class="about__bio">
+          Directora de producto y tecnología con más de <strong>5 años</strong> liderando equipos
+          multidisciplinarios de diseño, desarrollo y producto. Especializada en gestión ágil,
+          diseño de interfaces intuitivas y dirección técnica de soluciones digitales. Alineo la
+          estrategia de negocio con la experiencia del usuario y optimizo procesos mediante
+          metodologías ágiles y la integración de agentes de IA.
+        </p>
+        <div class="about__specs">
+          <div><span>Ubicación</span><strong>La Plata, Buenos Aires 🇦🇷</strong></div>
+          <div><span>Experiencia</span><strong>5+ años</strong></div>
+          <div><span>Idiomas</span><strong>Español (nativo) · Inglés</strong></div>
+          <div><span>Estado</span><strong>Disponible para proyectos</strong></div>
+        </div>
+        <div class="chips" data-chips></div>
+      </div>
+    </template>
+
+    <template id="tpl-experiencia">
+      <div class="timeline" data-timeline></div>
+    </template>
+
+    <template id="tpl-notas">
+      <div class="notes">
+        <aside class="notes__sidebar">
+          <div class="notes__search">Buscar…</div>
+          <button class="notes__item is-active" data-note="perfil">
+            <strong>Perfil</strong><small>Quién soy</small>
+          </button>
+          <button class="notes__item" data-note="destacados">
+            <strong>Lo destacado</strong><small>Logros</small>
+          </button>
+          <button class="notes__item" data-note="skills">
+            <strong>Competencias</strong><small>Skills clave</small>
+          </button>
+          <button class="notes__item notes__item--cta" data-download>
+            <strong>Descargar CV ↓</strong><small>PDF</small>
+          </button>
+        </aside>
+        <section class="notes__body" data-note-body></section>
+      </div>
+    </template>
+
+    <template id="tpl-contacto">
+      <div class="contact">
+        <h2>Trabajemos juntos</h2>
+        <p>La forma más rápida de optimizar tu producto empieza por una charla.</p>
+        <div class="contact__grid" data-contact></div>
+      </div>
+    </template>
+
+    <!-- ===== DOCK ===== -->
+    <nav class="dock glass" id="dock">
+      <button class="dock__app" data-open="acerca" data-tip="Acerca de mí">
+        <span class="dock__icon icon-finder"></span>
+      </button>
+      <button class="dock__app" data-open="experiencia" data-tip="Experiencia">
+        <span class="dock__icon icon-briefcase"></span>
+      </button>
+      <button class="dock__app" data-open="notas" data-tip="Notas">
+        <span class="dock__icon icon-notes"></span>
+      </button>
+      <button class="dock__app" data-open="contacto" data-tip="Contacto">
+        <span class="dock__icon icon-mail"></span>
+      </button>
+      <span class="dock__sep"></span>
+      <a class="dock__app" href="https://linkedin.com/in/andreamariange" target="_blank" rel="noopener" data-tip="LinkedIn">
+        <span class="dock__icon icon-linkedin"></span>
+      </a>
+      <a class="dock__app" href="https://github.com/andreamperezp" target="_blank" rel="noopener" data-tip="GitHub">
+        <span class="dock__icon icon-github"></span>
+      </a>
+      <a class="dock__app" href="https://andreaperez.dev" target="_blank" rel="noopener" data-tip="Web">
+        <span class="dock__icon icon-globe"></span>
+      </a>
+      <span class="dock__sep"></span>
+      <button class="dock__app" data-download data-tip="Descargar CV">
+        <span class="dock__icon icon-pdf"></span>
+      </button>
+    </nav>
+
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
