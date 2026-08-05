@@ -6,7 +6,7 @@
 window.ANDREA = {
   meta: {
     name: "Andrea Pérez",
-    role: "Directora de Producto y Tecnología · Product Manager · Project Manager",
+    role: "Product Designer · Product Manager · Project Manager",
     tagline: "No hago cosas increíbles. Solo optimizo procesos.",
     location: "La Plata, Buenos Aires, Argentina",
     phone: "+54 9 221 351 2482",
@@ -71,14 +71,14 @@ window.ANDREA = {
     }
   ],
 
-  // Competencias clave
+  // Competencias clave (level 0-100 para la visualización animada)
   skills: [
-    { label: "Gestión de equipos", detail: "Liderazgo multidisciplinario, mentoring, gestión ágil." },
-    { label: "Metodologías ágiles", detail: "Scrum, Kanban, Design Thinking, Lean UX." },
-    { label: "Dirección de producto", detail: "Estrategia, roadmap, análisis de KPIs." },
-    { label: "UX/UI", detail: "Wireframes, prototipos, diseño visual, design systems." },
-    { label: "IA & automatización", detail: "Agentes de IA, optimización de procesos, eficiencia." },
-    { label: "Herramientas", detail: "Jira, Trello, Notion, Figma, Adobe XD, GitHub." }
+    { label: "UX / UI Design", detail: "Wireframes, prototipos, diseño visual, design systems.", level: 95, icon: "🎨" },
+    { label: "Product Design", detail: "Estrategia, roadmap, análisis de KPIs.", level: 90, icon: "🧭" },
+    { label: "Gestión de equipos", detail: "Liderazgo multidisciplinario, mentoring, gestión ágil.", level: 92, icon: "👥" },
+    { label: "Metodologías ágiles", detail: "Scrum, Kanban, Design Thinking, Lean UX.", level: 88, icon: "🔁" },
+    { label: "IA & automatización", detail: "Agentes de IA, optimización de procesos, eficiencia.", level: 80, icon: "🤖" },
+    { label: "Herramientas", detail: "Figma, Adobe XD, Notion, Jira, GitHub.", level: 85, icon: "🛠️" }
   ],
 
   // Logros destacados (Notas)
