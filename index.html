@@ -80,7 +80,25 @@
         <span class="desk-icon__img icon-pdf"></span>
         <span class="desk-icon__label">CV_Andrea.pdf</span>
       </button>
+      <a class="desk-icon" href="https://v0-ahorrandy-app.vercel.app/nuevo" target="_blank" rel="noopener" title="Ahorrandy — app de gestión de gastos">
+        <span class="desk-icon__img icon-ahorrandy"></span>
+        <span class="desk-icon__label">Ahorrandy</span>
+      </a>
     </div>
+
+    <!-- Ahorrandy promo widget -->
+    <aside class="promo glass" id="promo">
+      <button class="promo__close" aria-label="Cerrar">×</button>
+      <div class="promo__icon icon-ahorrandy"></div>
+      <div class="promo__body">
+        <span class="promo__tag">✦ Proyecto propio</span>
+        <h3>Ahorrandy 💸</h3>
+        <p>Mi app para <strong>gestionar tus gastos</strong> sin esfuerzo. Cargá, controlá y ahorrá.</p>
+        <a class="promo__cta" href="https://v0-ahorrandy-app.vercel.app/nuevo" target="_blank" rel="noopener">
+          Probar la app →
+        </a>
+      </div>
+    </aside>
 
     <!-- ===== WINDOWS ===== -->
     <div id="windows" class="windows-layer"></div>
@@ -146,6 +164,75 @@
       </div>
     </template>
 
+    <template id="tpl-skills">
+      <div class="skills">
+        <div class="skills__head">
+          <h2>Competencias</h2>
+          <p>Mi caja de herramientas como <strong>Product Designer</strong> — se cargan solas ✦</p>
+        </div>
+        <div class="skills__list" data-skills></div>
+        <div class="skills__foot" data-skills-foot></div>
+      </div>
+    </template>
+
+    <template id="tpl-galeria">
+      <div class="gallery">
+        <div class="gallery__head">
+          <div>
+            <h2>Galería de trabajos</h2>
+            <p>Una selección de proyectos — hacé clic para ver más.</p>
+          </div>
+          <button class="gallery__admin-btn" data-admin title="Backoffice (gestionar)">⚙</button>
+        </div>
+        <div class="gallery__grid" data-gallery></div>
+      </div>
+    </template>
+
+    <template id="tpl-admin">
+      <div class="admin">
+        <div class="admin__cols">
+          <form class="admin__form" data-admin-form>
+            <h3>Cargar / editar obra</h3>
+            <input type="hidden" data-f-id />
+            <label>Título<input type="text" data-f-title required placeholder="Ej: Design System" /></label>
+            <label>Descripción<textarea data-f-desc rows="3" placeholder="Contá de qué se trata…"></textarea></label>
+            <label>Tags (separados por coma)<input type="text" data-f-tags placeholder="UX, Figma, Branding" /></label>
+            <label class="admin__file">Imágenes (podés elegir varias)
+              <input type="file" data-f-images accept="image/*" multiple />
+            </label>
+            <div class="admin__thumbs" data-f-thumbs></div>
+            <div class="admin__actions">
+              <button type="submit" class="admin__save">Guardar obra</button>
+              <button type="button" class="admin__reset" data-admin-reset>Limpiar</button>
+            </div>
+          </form>
+          <div class="admin__side">
+            <h3>Obras cargadas</h3>
+            <div class="admin__items" data-admin-items></div>
+            <div class="admin__publish">
+              <button data-admin-export class="admin__export">⬇ Exportar gallery.js</button>
+              <p class="admin__hint">Descargá el archivo y subilo a GitHub (carpeta <code>js/</code>) para publicarlo para todos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- ===== LIGHTBOX (visor de imágenes) ===== -->
+    <div class="lightbox" id="lightbox" hidden>
+      <button class="lightbox__close" data-lb-close aria-label="Cerrar">×</button>
+      <button class="lightbox__nav lightbox__prev" data-lb-prev aria-label="Anterior">‹</button>
+      <figure class="lightbox__stage">
+        <img data-lb-img alt="" />
+        <figcaption>
+          <h4 data-lb-title></h4>
+          <p data-lb-desc></p>
+          <span class="lightbox__count" data-lb-count></span>
+        </figcaption>
+      </figure>
+      <button class="lightbox__nav lightbox__next" data-lb-next aria-label="Siguiente">›</button>
+    </div>
+
     <!-- ===== DOCK ===== -->
     <nav class="dock glass" id="dock">
       <button class="dock__app" data-open="acerca" data-tip="Acerca de mí">
@@ -153,6 +240,12 @@
       </button>
       <button class="dock__app" data-open="experiencia" data-tip="Experiencia">
         <span class="dock__icon icon-briefcase"></span>
+      </button>
+      <button class="dock__app" data-open="skills" data-tip="Skills">
+        <span class="dock__icon icon-skills"></span>
+      </button>
+      <button class="dock__app" data-open="galeria" data-tip="Galería">
+        <span class="dock__icon icon-gallery"></span>
       </button>
       <button class="dock__app" data-open="notas" data-tip="Notas">
         <span class="dock__icon icon-notes"></span>
@@ -167,9 +260,6 @@
       <a class="dock__app" href="https://github.com/andreamperezp" target="_blank" rel="noopener" data-tip="GitHub">
         <span class="dock__icon icon-github"></span>
       </a>
-      <a class="dock__app" href="https://andreaperez.dev" target="_blank" rel="noopener" data-tip="Web">
-        <span class="dock__icon icon-globe"></span>
-      </a>
       <span class="dock__sep"></span>
       <button class="dock__app" data-download data-tip="Descargar CV">
         <span class="dock__icon icon-pdf"></span>
@@ -179,6 +269,7 @@
   </main>
 
   <script src="js/data.js"></script>
+  <script src="js/gallery.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
