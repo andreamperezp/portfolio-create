@@ -102,14 +102,17 @@ flowchart LR
 
 ```
 portfolio-create/
-├── index.html          # Estructura + templates de cada ventana
+├── index.html              # Estructura + templates de cada ventana
 ├── css/
-│   └── style.css       # Aurora, glass, dock, ventanas, animaciones
+│   └── style.css           # Aurora, glass, dock, ventanas, animaciones
 ├── js/
-│   ├── data.js         # ⬅️ TODO tu contenido vive acá (editá esto)
-│   └── main.js         # Window manager · dock · boot · reloj
+│   ├── data.js             # ⬅️ TODO tu contenido vive acá (editá esto)
+│   ├── supabase-config.js  # Config de la galería (URL + clave pública)
+│   ├── gallery.js          # Respaldo de la galería si no hay conexión
+│   └── main.js             # Window manager · dock · boot · reloj · galería
 └── assets/
     ├── favicon.svg
+    ├── ahorrandy.svg       # Logo real de la app Ahorrandy
     └── CV_Andrea_Perez.pdf
 ```
 
