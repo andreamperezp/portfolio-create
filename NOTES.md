@@ -18,7 +18,7 @@ HTML + CSS + JS vanilla, sin build. La galería usa **Supabase** (base + login).
 ## Apps del escritorio
 - **Acerca de**, **Experiencia**, **Skills**, **Galería**, **Notas**, **Contacto** (dock).
 - **Ahorrandy** → ícono con el **logo real** (chanchito) en el escritorio, el widget promo y el **dock**.
-  Abre la app en pestaña nueva → https://v0-ahorrandy-app.vercel.app/nuevo
+  Abre la app en pestaña nueva → https://ahorrandy.vercel.app
 - Ventanas: 🔴 cerrar · 🟡 minimizar (se recupera clickeando la app en el dock) · 🟢 maximizar (o doble clic en la barra).
 - En **celular** las ventanas abren a pantalla completa y el dock se desliza.
 
