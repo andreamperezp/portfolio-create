@@ -7,8 +7,12 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const isMobile = () => window.matchMedia("(max-width: 720px)").matches;
-  const ADMIN_PASS = "andrea"; // clave del backoffice (cosmética, sitio estático)
-  const STORE_KEY = "andreaos_gallery";
+
+  /* ---------- SUPABASE CLIENT ---------- */
+  const SUPA = window.SUPA || null;
+  const SB = (SUPA && window.supabase && window.supabase.createClient)
+    ? window.supabase.createClient(SUPA.url, SUPA.key)
+    : null;
 
   /* ---------- BOOT ---------- */
   function boot() {
@@ -34,7 +38,7 @@
 
   /* ---------- WINDOW MANAGER ---------- */
   const WIN = {
-    acerca:      { title: "Acerca de Andrea", tpl: "tpl-acerca", w: 560, h: 560, build: buildAbout },
+    acerca:      { title: "Acerca de Andrea", tpl: "tpl-acerca", w: 940, h: 600, build: buildAbout },
     experiencia: { title: "Experiencia — Trayectoria", tpl: "tpl-experiencia", w: 620, h: 560, build: buildTimeline },
     skills:      { title: "Skills — Competencias", tpl: "tpl-skills", w: 560, h: 580, build: buildSkills },
     galeria:     { title: "Galería de trabajos", tpl: "tpl-galeria", w: 760, h: 580, build: buildGallery },
@@ -77,7 +81,8 @@
         </div>
         <span class="window__title">${cfg.title}</span>
       </div>
-      <div class="window__body"></div>`;
+      <div class="window__body"></div>
+      <span class="window__resize" title="Arrastrá para redimensionar" aria-hidden="true"></span>`;
 
     const body = $(".window__body", win);
     body.appendChild($("#" + cfg.tpl).content.cloneNode(true));
@@ -90,6 +95,7 @@
     markDock();
 
     makeDraggable(win);
+    makeResizable(win);
     const bar = $(".window__bar", win);
     $(".traffic .c", win).addEventListener("click", (e) => { e.stopPropagation(); closeWindow(key); });
     $(".traffic .m", win).addEventListener("click", (e) => { e.stopPropagation(); minimizeWindow(key); });
@@ -160,15 +166,79 @@
     window.addEventListener("mouseup", () => { dragging = false; document.body.style.userSelect = ""; });
   }
 
-  /* ---------- BUILDERS: ABOUT ---------- */
+  /* ---------- RESIZE (arrastrar esquina inferior derecha) ---------- */
+  function makeResizable(win) {
+    const handle = $(".window__resize", win);
+    if (!handle) return;
+    let sx, sy, sw, sh, resizing = false;
+
+    const start = (e) => {
+      if (isMobile() || win.classList.contains("is-max")) return;
+      e.preventDefault(); e.stopPropagation();
+      resizing = true;
+      const p = e.touches ? e.touches[0] : e;
+      sx = p.clientX; sy = p.clientY;
+      sw = win.offsetWidth; sh = win.offsetHeight;
+      document.body.style.userSelect = "none";
+      focusWindow(win.dataset.key);
+    };
+    const move = (e) => {
+      if (!resizing) return;
+      const p = e.touches ? e.touches[0] : e;
+      const maxW = window.innerWidth - win.offsetLeft - 12;
+      const maxH = window.innerHeight - win.offsetTop - 12;
+      win.style.width = Math.max(320, Math.min(maxW, sw + p.clientX - sx)) + "px";
+      win.style.height = Math.max(240, Math.min(maxH, sh + p.clientY - sy)) + "px";
+    };
+    const end = () => { resizing = false; document.body.style.userSelect = ""; };
+
+    handle.addEventListener("mousedown", start);
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", end);
+    handle.addEventListener("touchstart", start, { passive: false });
+    window.addEventListener("touchmove", move, { passive: false });
+    window.addEventListener("touchend", end);
+  }
+
+  /* ---------- BUILDERS: ABOUT (poster) ---------- */
   function buildAbout(body) {
-    const chips = $("[data-chips]", body);
-    D.keywords.forEach((k) => {
-      const c = document.createElement("span");
-      c.className = "chip";
-      c.textContent = k;
-      chips.appendChild(c);
-    });
+    // Skills como pills
+    const sk = $("[data-abx-skills]", body);
+    if (sk) {
+      (D.skills || []).forEach((s) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span>${s.icon || "✦"}</span>${s.label}`;
+        sk.appendChild(li);
+      });
+    }
+
+    // Badges de portfolio / links
+    const bd = $("[data-abx-badges]", body);
+    if (bd) {
+      const badges = [
+        { t: "LinkedIn ↗", href: D.meta.linkedin, ext: true },
+        { t: "Web ↗", href: D.meta.web, ext: true, ghost: true },
+        { t: "Descargar CV ↓", href: D.meta.cv, dl: true, ghost: true },
+      ];
+      badges.forEach((b) => {
+        const a = document.createElement("a");
+        a.className = "abx__badge" + (b.ghost ? " is-ghost" : "");
+        a.href = b.href;
+        a.textContent = b.t;
+        if (b.ext) { a.target = "_blank"; a.rel = "noopener"; }
+        if (b.dl) { a.target = "_blank"; a.setAttribute("download", ""); }
+        bd.appendChild(a);
+      });
+    }
+
+    // Barra de contacto
+    const ct = $("[data-abx-contact]", body);
+    if (ct) {
+      ct.innerHTML =
+        `<span><i>✉</i> ${D.meta.email}</span>` +
+        `<span><i>☎</i> ${D.meta.phone}</span>` +
+        `<span><i>◍</i> ${D.meta.location}</span>`;
+    }
   }
 
   /* ---------- BUILDERS: TIMELINE ---------- */
@@ -236,31 +306,43 @@
     requestAnimationFrame(step);
   }
 
-  /* ---------- GALLERY DATA (seed + localStorage) ---------- */
-  function loadStore() {
-    try {
-      const raw = localStorage.getItem(STORE_KEY);
-      if (raw) return JSON.parse(raw);
-    } catch (e) {}
-    return null;
+  /* ---------- GALLERY DATA (Supabase + fallback local) ---------- */
+  // Convierte una fila de la base al formato que usa el frontend.
+  function rowToItem(r) {
+    return {
+      id: r.id,
+      title: r.title || "",
+      desc: r.description || "",
+      tags: r.tags || [],
+      images: r.images || [],
+      position: r.position || 0,
+    };
   }
-  function saveStore(arr) {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(arr)); } catch (e) {
-      alert("No se pudo guardar (¿imágenes muy pesadas?). Probá con imágenes más livianas.");
+
+  // Lee la galería desde Supabase; si no hay conexión, usa el seed de gallery.js.
+  async function fetchGallery() {
+    if (!SB) return (window.GALLERY_SEED || []).slice();
+    const { data, error } = await SB
+      .from(SUPA.table)
+      .select("id,title,description,tags,images,position,created_at")
+      .order("position", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) {
+      console.warn("No se pudo cargar la galería desde Supabase:", error.message);
+      return (window.GALLERY_SEED || []).slice();
     }
-  }
-  function galleryData() {
-    return loadStore() || (window.GALLERY_SEED || []).slice();
+    return (data || []).map(rowToItem);
   }
 
   /* ---------- BUILDERS: GALLERY ---------- */
   function buildGallery(body) {
-    renderGalleryGrid($("[data-gallery]", body));
+    const grid = $("[data-gallery]", body);
+    grid.innerHTML = '<p class="gallery__empty">Cargando galería…</p>';
+    fetchGallery().then((items) => renderGalleryGrid(grid, items));
     $("[data-admin]", body).addEventListener("click", openAdmin);
   }
 
-  function renderGalleryGrid(grid) {
-    const items = galleryData();
+  function renderGalleryGrid(grid, items) {
     grid.innerHTML = "";
     if (!items.length) {
       grid.innerHTML = '<p class="gallery__empty">Todavía no hay trabajos. Abrí el backoffice ⚙ para cargar el primero.</p>';
@@ -285,7 +367,7 @@
 
   function refreshGallery() {
     const win = openWins.get("galeria");
-    if (win) renderGalleryGrid($("[data-gallery]", win));
+    if (win) fetchGallery().then((items) => renderGalleryGrid($("[data-gallery]", win), items));
   }
 
   /* ---------- LIGHTBOX ---------- */
@@ -315,16 +397,92 @@
   }
   function closeLightbox() { $("#lightbox").hidden = true; LB.item = null; }
 
-  /* ---------- BACKOFFICE ---------- */
+  /* ---------- BACKOFFICE (login real con Supabase) ---------- */
   function openAdmin() {
-    if (openWins.has("admin")) { restoreWindow("admin"); focusWindow("admin"); return; }
-    const code = prompt("🔒 Backoffice — ingresá la clave de acceso:");
-    if (code === null) return;
-    if (code !== ADMIN_PASS) { alert("Clave incorrecta."); return; }
     openWindow("admin");
   }
 
-  function buildAdmin(body) {
+  function traducirError(msg) {
+    if (/invalid login credentials/i.test(msg)) return "Email o contraseña incorrectos.";
+    if (/email not confirmed/i.test(msg)) return "Falta confirmar el email de esa cuenta.";
+    if (/failed to fetch|network/i.test(msg)) return "Sin conexión con el servidor. Reintentá.";
+    return msg;
+  }
+
+  async function buildAdmin(body) {
+    const loadingView = $("[data-admin-loading]", body);
+    const loginView = $("[data-admin-login]", body);
+    const panelView = $("[data-admin-panel]", body);
+    const loginForm = $("[data-login-form]", body);
+    const loginMsg = $("[data-login-msg]", body);
+    const loginBtn = $("[data-login-btn]", body);
+
+    function show(state) {
+      loadingView.hidden = state !== "loading";
+      loginView.hidden = state !== "login";
+      panelView.hidden = state !== "panel";
+    }
+    function setMsg(el, text, kind) {
+      el.textContent = text || "";
+      el.className = "admin__msg" + (kind ? " is-" + kind : "");
+    }
+
+    if (!SB) {
+      show("login");
+      loginBtn.disabled = true;
+      setMsg(loginMsg, "Supabase no está disponible. Revisá tu conexión y recargá.", "err");
+      return;
+    }
+
+    async function refresh() {
+      show("loading");
+      const { data: { session } } = await SB.auth.getSession();
+      const user = session && session.user;
+      if (user && user.id === SUPA.adminId) {
+        $("[data-admin-who]", body).textContent = user.email || "Sesión activa";
+        show("panel");
+        initPanel(body);
+      } else if (user) {
+        await SB.auth.signOut();
+        show("login");
+        setMsg(loginMsg, "Esa cuenta no tiene permisos de administradora.", "err");
+      } else {
+        show("login");
+      }
+    }
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = $("[data-login-email]", body).value.trim();
+      const password = $("[data-login-pass]", body).value;
+      setMsg(loginMsg, "Entrando…");
+      loginBtn.disabled = true;
+      const { data, error } = await SB.auth.signInWithPassword({ email, password });
+      loginBtn.disabled = false;
+      if (error) { setMsg(loginMsg, traducirError(error.message), "err"); return; }
+      if (!data.user || data.user.id !== SUPA.adminId) {
+        await SB.auth.signOut();
+        setMsg(loginMsg, "Esa cuenta no tiene permisos de administradora.", "err");
+        return;
+      }
+      setMsg(loginMsg, "");
+      refresh();
+    });
+
+    $("[data-admin-logout]", body).addEventListener("click", async () => {
+      await SB.auth.signOut();
+      setMsg(loginMsg, "");
+      refresh();
+    });
+
+    refresh();
+  }
+
+  // Inicializa el panel CRUD (una sola vez por ventana).
+  function initPanel(body) {
+    if (body.dataset.panelReady === "1") return;
+    body.dataset.panelReady = "1";
+
     const form = $("[data-admin-form]", body);
     const fId = $("[data-f-id]", body);
     const fTitle = $("[data-f-title]", body);
@@ -333,11 +491,20 @@
     const fImages = $("[data-f-images]", body);
     const thumbs = $("[data-f-thumbs]", body);
     const itemsWrap = $("[data-admin-items]", body);
+    const saveBtn = $("[data-admin-save]", body);
+    const msg = $("[data-admin-msg]", body);
+    // pending: { url } (imagen ya publicada) o { file, preview } (nueva por subir)
     let pending = [];
+
+    function setMsg(text, kind) {
+      msg.textContent = text || "";
+      msg.className = "admin__msg" + (kind ? " is-" + kind : "");
+    }
 
     function renderThumbs() {
       thumbs.innerHTML = "";
-      pending.forEach((src, i) => {
+      pending.forEach((p, i) => {
+        const src = p.url || p.preview;
         const t = document.createElement("span");
         t.className = "admin__thumb";
         t.style.backgroundImage = `url('${src}')`;
@@ -347,8 +514,9 @@
       });
     }
 
-    function renderItems() {
-      const items = galleryData();
+    async function renderItems() {
+      itemsWrap.innerHTML = '<p class="admin__empty">Cargando…</p>';
+      const items = await fetchGallery();
       itemsWrap.innerHTML = "";
       if (!items.length) { itemsWrap.innerHTML = '<p class="admin__empty">Sin obras aún.</p>'; return; }
       items.forEach((it) => {
@@ -362,11 +530,7 @@
             <button data-del title="Eliminar">🗑</button>
           </span>`;
         row.querySelector("[data-edit]").addEventListener("click", () => loadIntoForm(it));
-        row.querySelector("[data-del]").addEventListener("click", () => {
-          if (!confirm(`¿Eliminar "${it.title}"?`)) return;
-          const arr = galleryData().filter((x) => x.id !== it.id);
-          saveStore(arr); renderItems(); refreshGallery();
-        });
+        row.querySelector("[data-del]").addEventListener("click", () => removeItem(it));
         itemsWrap.appendChild(row);
       });
     }
@@ -376,61 +540,90 @@
       fTitle.value = it.title || "";
       fDesc.value = it.desc || "";
       fTags.value = (it.tags || []).join(", ");
-      pending = (it.images || []).slice();
+      pending = (it.images || []).map((url) => ({ url }));
       renderThumbs();
+      setMsg("Editando: " + (it.title || "obra"));
       fTitle.focus();
     }
 
     function resetForm() {
-      form.reset(); fId.value = ""; pending = []; renderThumbs();
+      form.reset(); fId.value = ""; pending = []; renderThumbs(); setMsg("");
+    }
+
+    async function removeItem(it) {
+      if (!confirm(`¿Eliminar "${it.title}"?`)) return;
+      const { error } = await SB.from(SUPA.table).delete().eq("id", it.id);
+      if (error) { setMsg("No se pudo eliminar: " + error.message, "err"); return; }
+      removeStorageImages(it.images);
+      setMsg("Obra eliminada.", "ok");
+      renderItems(); refreshGallery();
     }
 
     fImages.addEventListener("change", (e) => {
       [...e.target.files].forEach((file) => {
         const r = new FileReader();
-        r.onload = () => { pending.push(r.result); renderThumbs(); };
+        r.onload = () => { pending.push({ file, preview: r.result }); renderThumbs(); };
         r.readAsDataURL(file);
       });
       fImages.value = "";
     });
 
-    form.addEventListener("submit", (e) => {
+    async function uploadImage(file) {
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+      const path = `works/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error } = await SB.storage.from(SUPA.bucket).upload(path, file, { cacheControl: "3600", upsert: false });
+      if (error) throw error;
+      return SB.storage.from(SUPA.bucket).getPublicUrl(path).data.publicUrl;
+    }
+
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const arr = galleryData();
-      const item = {
-        id: fId.value || "w" + Date.now(),
-        title: fTitle.value.trim(),
-        desc: fDesc.value.trim(),
-        tags: fTags.value.split(",").map((t) => t.trim()).filter(Boolean),
-        images: pending.slice(),
-      };
-      const idx = arr.findIndex((x) => x.id === item.id);
-      if (idx >= 0) arr[idx] = item; else arr.push(item);
-      saveStore(arr);
-      resetForm(); renderItems(); refreshGallery();
+      const title = fTitle.value.trim();
+      if (!title) { setMsg("Poné un título.", "err"); return; }
+      saveBtn.disabled = true;
+      setMsg("Guardando…");
+      try {
+        // Sube las imágenes nuevas respetando el orden elegido.
+        const images = [];
+        for (const p of pending) {
+          images.push(p.url ? p.url : await uploadImage(p.file));
+        }
+        const payload = {
+          title,
+          description: fDesc.value.trim(),
+          tags: fTags.value.split(",").map((t) => t.trim()).filter(Boolean),
+          images,
+        };
+        let error;
+        if (fId.value) {
+          ({ error } = await SB.from(SUPA.table).update(payload).eq("id", fId.value));
+        } else {
+          payload.position = Date.now(); // se agrega al final
+          ({ error } = await SB.from(SUPA.table).insert(payload));
+        }
+        if (error) throw error;
+        setMsg("¡Guardado y publicado! 🚀", "ok");
+        resetForm(); renderItems(); refreshGallery();
+      } catch (err) {
+        setMsg("No se pudo guardar: " + traducirError(err.message || String(err)), "err");
+      } finally {
+        saveBtn.disabled = false;
+      }
     });
 
     $("[data-admin-reset]", body).addEventListener("click", resetForm);
-    $("[data-admin-export]", body).addEventListener("click", exportGallery);
-
     renderItems();
   }
 
-  function exportGallery() {
-    const arr = galleryData();
-    const header =
-      "/* ============================================================\n" +
-      "   AndreaOS — Galería de trabajos (datos publicados)\n" +
-      "   Generado desde el backoffice. Subí este archivo a js/gallery.js\n" +
-      "   en GitHub para publicar los cambios para todos.\n" +
-      "   ============================================================ */\n\n";
-    const content = header + "window.GALLERY_SEED = " + JSON.stringify(arr, null, 2) + ";\n";
-    const blob = new Blob([content], { type: "text/javascript" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "gallery.js";
-    a.click();
-    URL.revokeObjectURL(a.href);
+  // Borra del bucket las imágenes cuyo URL apunta a nuestro storage.
+  function removeStorageImages(images) {
+    if (!SB || !images || !images.length) return;
+    const marker = `/storage/v1/object/public/${SUPA.bucket}/`;
+    const paths = images
+      .filter((u) => typeof u === "string" && u.includes(marker))
+      .map((u) => u.split(marker)[1])
+      .filter(Boolean);
+    if (paths.length) SB.storage.from(SUPA.bucket).remove(paths);
   }
 
   /* ---------- BUILDERS: NOTES ---------- */

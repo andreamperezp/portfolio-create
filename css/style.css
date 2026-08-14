@@ -171,10 +171,13 @@ button, a { font-family: inherit; color: inherit; cursor: pointer; }
 /* ============================================================
    WINDOWS
    ============================================================ */
-.windows-layer { position: absolute; inset: 0; z-index: 20; }
+/* La capa de ventanas cubre toda la pantalla pero NO debe capturar clicks
+   en zonas vacías (si no, bloquea íconos del escritorio y el widget promo). */
+.windows-layer { position: absolute; inset: 0; z-index: 20; pointer-events: none; }
 
 .window {
   position: absolute;
+  pointer-events: auto;
   min-width: 320px;
   border-radius: var(--radius);
   background: var(--glass);
@@ -220,39 +223,121 @@ button, a { font-family: inherit; color: inherit; cursor: pointer; }
   background: rgba(255, 255, 255, 0.16); border-radius: 99px;
 }
 
+/* Handle para redimensionar (esquina inferior derecha) */
+.window__resize {
+  position: absolute; right: 3px; bottom: 3px; width: 20px; height: 20px;
+  cursor: nwse-resize; z-index: 8; border-radius: 0 0 12px 0;
+  background:
+    linear-gradient(135deg, transparent 0 46%, rgba(255,255,255,0.32) 46% 54%, transparent 54% 66%, rgba(255,255,255,0.32) 66% 74%, transparent 74%);
+  opacity: 0.55; transition: opacity 0.15s;
+}
+.window__resize:hover { opacity: 1; }
+.window.is-max .window__resize { display: none; }
+@media (max-width: 720px) { .window__resize { display: none; } }
+
 /* Focus state */
 .window.is-front { box-shadow: var(--shadow), 0 0 0 1px rgba(139,123,255,0.3); }
 
 /* ============================================================
-   ABOUT
+   ABOUT — poster editorial (foto de fondo + info)
    ============================================================ */
-.about__hero { display: flex; gap: 18px; align-items: center; margin-bottom: 18px; }
-.about__avatar {
-  width: 68px; height: 68px; border-radius: 20px; flex: 0 0 68px;
-  display: grid; place-items: center; font-weight: 700; font-size: 24px;
-  background: linear-gradient(135deg, var(--violet), var(--teal));
-  color: #0b0d1a; box-shadow: 0 10px 30px -8px var(--violet);
-}
-.about h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
-.about__role { font-size: 13px; color: var(--teal); margin-top: 3px; }
-.about__tag { font-size: 13px; color: var(--ink-soft); font-style: italic; margin-top: 8px; }
-.about__bio { font-size: 14px; line-height: 1.65; color: var(--ink-soft); margin-bottom: 20px; }
-.about__bio strong { color: var(--ink); }
-.about__specs {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;
-}
-.about__specs > div {
-  padding: 12px 14px; border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04); border: 1px solid var(--stroke);
-}
-.about__specs span { display: block; font-size: 11px; color: var(--ink-faint); margin-bottom: 3px; }
-.about__specs strong { font-size: 13px; font-weight: 500; }
+.window[data-key="acerca"] .window__body { padding: 0; }
 
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip {
-  font-size: 12px; padding: 6px 12px; border-radius: 99px;
-  background: rgba(139, 123, 255, 0.14); border: 1px solid rgba(139, 123, 255, 0.3);
-  color: #cfc7ff;
+.abx { position: relative; height: 100%; min-height: 460px; overflow: hidden; background: #0b0d1a; }
+
+/* Foto de fondo (portarretrato B&N) */
+.abx__photo {
+  position: absolute; top: 0; right: 0; height: 100%; width: 54%;
+  object-fit: cover; object-position: 50% 12%;
+  filter: grayscale(1) contrast(1.04);
+}
+.abx__scrim {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, #0b0d1a 30%, rgba(11,13,26,0.88) 46%, rgba(11,13,26,0.35) 62%, rgba(11,13,26,0.04) 80%),
+    linear-gradient(0deg, rgba(11,13,26,0.92) 2%, rgba(11,13,26,0) 26%),
+    radial-gradient(120% 80% at 8% 0%, rgba(139,123,255,0.18), transparent 55%);
+}
+
+/* Rótulo vertical en el borde (estilo art-director) */
+.abx__edge {
+  position: absolute; right: 16px; top: 50%; z-index: 3;
+  transform: translateY(-50%); writing-mode: vertical-rl; text-orientation: mixed;
+  font-size: 10px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;
+  color: #fff; mix-blend-mode: difference; opacity: 0.85;
+}
+
+.abx__inner {
+  position: relative; z-index: 2; height: 100%; box-sizing: border-box;
+  padding: 30px 34px; display: flex; flex-direction: column; overflow: auto;
+}
+.abx__inner::-webkit-scrollbar { width: 8px; }
+.abx__inner::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 4px; }
+
+.abx__head { margin-bottom: 4px; }
+.abx__kicker { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); }
+.abx__name {
+  font-family: inherit; font-weight: 800; text-transform: uppercase; letter-spacing: -2px;
+  font-size: clamp(42px, 7.5vw, 78px); line-height: 0.86; margin: 10px 0 8px;
+  background: linear-gradient(180deg, #ffffff, #cfc9ff); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.abx__name span {
+  display: block; color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255,255,255,0.6); background: none;
+}
+.abx__role { font-size: 12.5px; font-weight: 500; letter-spacing: 0.3px; color: var(--ink-soft); }
+
+.abx__block { margin-top: 22px; max-width: 460px; }
+.abx__h {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #fff;
+  margin: 0 0 12px; padding-left: 17px; position: relative;
+}
+.abx__h::before {
+  content: ""; position: absolute; left: 0; top: 50%; width: 9px; height: 9px; border-radius: 2px;
+  transform: translateY(-50%) rotate(45deg); background: linear-gradient(135deg, var(--violet), var(--teal));
+}
+
+.abx__stats { display: flex; gap: 26px; margin-bottom: 15px; }
+.abx__stats > div { display: flex; flex-direction: column; }
+.abx__stats b {
+  font-size: 30px; font-weight: 800; line-height: 1;
+  background: linear-gradient(135deg, var(--violet), var(--teal)); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.abx__stats span { font-size: 11px; color: var(--ink-faint); margin-top: 4px; }
+.abx__bio { font-size: 13.5px; line-height: 1.62; color: var(--ink-soft); }
+.abx__tag { font-size: 13px; font-style: italic; color: var(--teal); margin-top: 10px; }
+
+.abx__skilllist { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.abx__skilllist li {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-soft);
+  padding: 6px 11px; border-radius: 999px; background: rgba(255,255,255,0.05); border: 1px solid var(--stroke);
+}
+
+.abx__badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.abx__badge {
+  font-size: 12px; font-weight: 600; text-decoration: none; padding: 9px 15px; border-radius: 10px;
+  color: #0b0d1a; background: linear-gradient(135deg, var(--violet), var(--teal));
+}
+.abx__badge.is-ghost { color: var(--ink); background: rgba(255,255,255,0.06); border: 1px solid var(--stroke); }
+.abx__badge:hover { filter: brightness(1.08); }
+
+.abx__contact {
+  margin-top: auto; padding-top: 20px; display: flex; flex-wrap: wrap; gap: 16px;
+  font-size: 12px; color: var(--ink-soft);
+}
+.abx__contact span { display: inline-flex; align-items: center; gap: 6px; }
+.abx__contact i { font-style: normal; color: var(--teal); }
+
+@media (max-width: 720px) {
+  .abx__photo { width: 100%; opacity: 0.42; object-position: 50% 16%; }
+  .abx__scrim {
+    background:
+      linear-gradient(0deg, #0b0d1a 20%, rgba(11,13,26,0.55) 58%, rgba(11,13,26,0.35) 100%),
+      radial-gradient(120% 60% at 8% 0%, rgba(139,123,255,0.18), transparent 55%);
+  }
+  .abx__block { max-width: 100%; }
+  .abx__edge { display: none; }
+  .abx__name { font-size: clamp(40px, 14vw, 64px); }
 }
 
 /* ============================================================
@@ -581,6 +666,51 @@ button, a { font-family: inherit; color: inherit; cursor: pointer; }
 .admin__hint { font-size: 11px; color: var(--ink-faint); margin-top: 8px; line-height: 1.5; }
 .admin__hint code { background: rgba(255, 255, 255, 0.08); padding: 1px 5px; border-radius: 4px; }
 
+/* ---------- Backoffice: login + estados ---------- */
+.admin__loading { display: grid; place-items: center; height: 100%; color: var(--ink-faint); font-size: 13px; }
+.admin__login { display: grid; place-items: center; height: 100%; padding: 10px; }
+.admin__login-card {
+  width: 100%; max-width: 340px; text-align: center;
+  background: rgba(255, 255, 255, 0.04); border: 1px solid var(--stroke);
+  border-radius: 18px; padding: 26px 24px;
+}
+.admin__login-logo {
+  width: 54px; height: 54px; margin: 0 auto 12px; border-radius: 15px;
+  display: grid; place-items: center; font-size: 26px;
+  background: linear-gradient(135deg, var(--violet), var(--teal));
+}
+.admin__login-card h3 { font-size: 17px; margin-bottom: 4px; }
+.admin__login-card > p { font-size: 12px; color: var(--ink-soft); margin-bottom: 18px; }
+.admin__login form { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+.admin__login label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: var(--ink-soft); }
+.admin__login input {
+  background: rgba(255, 255, 255, 0.05); border: 1px solid var(--stroke); border-radius: 9px;
+  padding: 10px 12px; color: var(--ink); font-family: inherit; font-size: 13px;
+}
+.admin__login input:focus { outline: none; border-color: var(--violet); }
+.admin__login .admin__save { width: 100%; margin-top: 4px; padding: 11px; cursor: pointer; }
+.admin__login .admin__save[disabled] { opacity: 0.6; cursor: default; }
+.admin__msg { font-size: 12px; line-height: 1.5; margin-top: 4px; min-height: 16px; }
+.admin__msg.is-err { color: #ff8f8f; }
+.admin__msg.is-ok { color: var(--teal); }
+.admin__login-foot { font-size: 11px; color: var(--ink-faint); margin-top: 16px; }
+
+.admin__topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--stroke);
+}
+.admin__who { font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 7px; }
+.admin__who::before {
+  content: ""; width: 7px; height: 7px; border-radius: 50%;
+  background: #45e08a; box-shadow: 0 0 8px #45e08a;
+}
+.admin__logout {
+  background: rgba(255, 255, 255, 0.06); border: 1px solid var(--stroke); color: var(--ink-soft);
+  padding: 7px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;
+}
+.admin__logout:hover { color: var(--ink); }
+.admin__save[disabled], .admin__reset[disabled] { opacity: 0.6; cursor: default; }
+
 /* ============================================================
    v2 — AHORRANDY (widget promo)
    ============================================================ */
@@ -599,9 +729,7 @@ button, a { font-family: inherit; color: inherit; cursor: pointer; }
   width: 46px; height: 46px; border-radius: 13px; flex: 0 0 46px; position: relative;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
-.promo__icon.icon-ahorrandy::after {
-  content: "💸"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 24px;
-}
+.promo__icon.icon-ahorrandy::after { content: none; }
 .promo__body { flex: 1; }
 .promo__tag { font-size: 10px; color: var(--teal); text-transform: uppercase; letter-spacing: 0.5px; }
 .promo__body h3 { font-size: 15px; margin: 3px 0 5px; }
@@ -619,11 +747,12 @@ button, a { font-family: inherit; color: inherit; cursor: pointer; }
    ============================================================ */
 .icon-skills   { background: linear-gradient(160deg, #a99bff, #4fd6c9); }
 .icon-gallery  { background: linear-gradient(160deg, #ff8fc7, #8b7bff); }
-.icon-ahorrandy{ background: linear-gradient(160deg, #45e08a, #2f8f88); }
 .icon-skills::after   { content: "📊"; }
 .icon-gallery::after  { content: "🖼"; }
-.icon-ahorrandy::after{ content: "💸"; }
-.desk-icon__img.icon-ahorrandy::after { content: "💸"; }
+/* Ahorrandy: logo real de la app (SVG), no emoji */
+.icon-ahorrandy{ background: #fff3e6 url("../assets/ahorrandy.svg") center/cover no-repeat; }
+.icon-ahorrandy::after{ content: none; }
+.desk-icon__img.icon-ahorrandy::after { content: none; }
 
 /* ============================================================
    v2 — MOBILE (comportamiento adaptado)

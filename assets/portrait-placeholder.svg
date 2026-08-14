@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 1000" role="img" aria-label="Placeholder de foto">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eef0f5"/>
+      <stop offset="1" stop-color="#d8dae4"/>
+    </linearGradient>
+  </defs>
+  <rect width="700" height="1000" fill="url(#bg)"/>
+  <!-- silueta sentada -->
+  <g fill="#b9bccb">
+    <circle cx="350" cy="250" r="78"/>
+    <path d="M350 330 c-70 0 -120 46 -128 118 l-16 150 c-4 40 20 58 54 58 h180 c34 0 58 -18 54 -58 l-16 -150 c-8 -72 -58 -118 -128 -118 Z"/>
+    <path d="M244 560 l-20 150 c-3 22 30 30 40 8 l40 -96 Z"/>
+    <path d="M456 560 l20 150 c3 22 -30 30 -40 8 l-40 -96 Z"/>
+    <path d="M300 700 l-14 210 h40 l24 -170 24 170 h40 l-14 -210 Z"/>
+  </g>
+  <!-- banquito -->
+  <g fill="none" stroke="#a7abbd" stroke-width="10" stroke-linecap="round">
+    <line x1="300" y1="720" x2="270" y2="930"/>
+    <line x1="400" y1="720" x2="430" y2="930"/>
+    <line x1="255" y1="880" x2="445" y2="880"/>
+  </g>
+  <text x="350" y="972" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="20" font-weight="600" fill="#9195a8">
+    Tu foto → assets/andrea-portrait.jpg
+  </text>
+</svg>

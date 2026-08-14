@@ -80,7 +80,7 @@
         <span class="desk-icon__img icon-pdf"></span>
         <span class="desk-icon__label">CV_Andrea.pdf</span>
       </button>
-      <a class="desk-icon" href="https://v0-ahorrandy-app.vercel.app/nuevo" target="_blank" rel="noopener" title="Ahorrandy — app de gestión de gastos">
+      <a class="desk-icon" href="https://ahorrandy.vercel.app" target="_blank" rel="noopener" title="Ahorrandy — app de gestión de gastos">
         <span class="desk-icon__img icon-ahorrandy"></span>
         <span class="desk-icon__label">Ahorrandy</span>
       </a>
@@ -94,7 +94,7 @@
         <span class="promo__tag">✦ Proyecto propio</span>
         <h3>Ahorrandy 💸</h3>
         <p>Mi app para <strong>gestionar tus gastos</strong> sin esfuerzo. Cargá, controlá y ahorrá.</p>
-        <a class="promo__cta" href="https://v0-ahorrandy-app.vercel.app/nuevo" target="_blank" rel="noopener">
+        <a class="promo__cta" href="https://ahorrandy.vercel.app" target="_blank" rel="noopener">
           Probar la app →
         </a>
       </div>
@@ -105,29 +105,42 @@
 
     <!-- Templates for window content -->
     <template id="tpl-acerca">
-      <div class="about">
-        <div class="about__hero">
-          <div class="about__avatar">AP</div>
-          <div>
-            <h1>Andrea Pérez</h1>
-            <p class="about__role">Product Designer · Product Manager · Project Manager</p>
-            <p class="about__tag">“No hago cosas increíbles. Solo optimizo procesos.”</p>
-          </div>
+      <div class="abx">
+        <img class="abx__photo" src="assets/andrea-portrait.jpg" alt="Andrea Pérez"
+             onerror="this.onerror=null;this.src='assets/portrait-placeholder.svg'" />
+        <div class="abx__scrim"></div>
+        <span class="abx__edge">Product Designer</span>
+
+        <div class="abx__inner">
+          <header class="abx__head">
+            <span class="abx__kicker">✦ Acerca de mí</span>
+            <h1 class="abx__name">Andrea<span>Pérez</span></h1>
+            <p class="abx__role">Product Designer · Product Manager · Project Manager</p>
+          </header>
+
+          <section class="abx__block abx__dna">
+            <h3 class="abx__h">Creative DNA</h3>
+            <div class="abx__stats">
+              <div><b>5+</b><span>años liderando</span></div>
+              <div><b>4</b><span>equipos &amp; países</span></div>
+              <div><b>IA</b><span>+ automatización</span></div>
+            </div>
+            <p class="abx__bio">
+              Directora de producto y tecnología. Lidero equipos multidisciplinarios de diseño,
+              desarrollo y producto, alineando la estrategia de negocio con la experiencia del
+              usuario. Optimizo procesos con metodologías ágiles e integración de agentes de IA.
+            </p>
+            <p class="abx__tag">“No hago cosas increíbles. Solo optimizo procesos.”</p>
+          </section>
+
+          <section class="abx__block abx__skills">
+            <h3 class="abx__h">Skills</h3>
+            <ul class="abx__skilllist" data-abx-skills></ul>
+          </section>
+
+          <div class="abx__badges" data-abx-badges></div>
+          <footer class="abx__contact" data-abx-contact></footer>
         </div>
-        <p class="about__bio">
-          Directora de producto y tecnología con más de <strong>5 años</strong> liderando equipos
-          multidisciplinarios de diseño, desarrollo y producto. Especializada en gestión ágil,
-          diseño de interfaces intuitivas y dirección técnica de soluciones digitales. Alineo la
-          estrategia de negocio con la experiencia del usuario y optimizo procesos mediante
-          metodologías ágiles y la integración de agentes de IA.
-        </p>
-        <div class="about__specs">
-          <div><span>Ubicación</span><strong>La Plata, Buenos Aires 🇦🇷</strong></div>
-          <div><span>Experiencia</span><strong>5+ años</strong></div>
-          <div><span>Idiomas</span><strong>Español (nativo) · Inglés</strong></div>
-          <div><span>Estado</span><strong>Disponible para proyectos</strong></div>
-        </div>
-        <div class="chips" data-chips></div>
       </div>
     </template>
 
@@ -190,31 +203,61 @@
 
     <template id="tpl-admin">
       <div class="admin">
-        <div class="admin__cols">
-          <form class="admin__form" data-admin-form>
-            <h3>Cargar / editar obra</h3>
-            <input type="hidden" data-f-id />
-            <label>Título<input type="text" data-f-title required placeholder="Ej: Design System" /></label>
-            <label>Descripción<textarea data-f-desc rows="3" placeholder="Contá de qué se trata…"></textarea></label>
-            <label>Tags (separados por coma)<input type="text" data-f-tags placeholder="UX, Figma, Branding" /></label>
-            <label class="admin__file">Imágenes (podés elegir varias)
-              <input type="file" data-f-images accept="image/*" multiple />
-            </label>
-            <div class="admin__thumbs" data-f-thumbs></div>
-            <div class="admin__actions">
-              <button type="submit" class="admin__save">Guardar obra</button>
-              <button type="button" class="admin__reset" data-admin-reset>Limpiar</button>
-            </div>
-          </form>
-          <div class="admin__side">
-            <h3>Obras cargadas</h3>
-            <div class="admin__items" data-admin-items></div>
-            <div class="admin__publish">
-              <button data-admin-export class="admin__export">⬇ Exportar gallery.js</button>
-              <p class="admin__hint">Descargá el archivo y subilo a GitHub (carpeta <code>js/</code>) para publicarlo para todos.</p>
+
+        <!-- Estado: cargando -->
+        <div class="admin__loading" data-admin-loading>Cargando…</div>
+
+        <!-- Estado: login -->
+        <div class="admin__login" data-admin-login hidden>
+          <div class="admin__login-card">
+            <div class="admin__login-logo">🔒</div>
+            <h3>Backoffice</h3>
+            <p>Ingresá con tu cuenta de administradora para gestionar la galería.</p>
+            <form data-login-form>
+              <label>Email
+                <input type="email" data-login-email required placeholder="vos@email.com" autocomplete="username" />
+              </label>
+              <label>Contraseña
+                <input type="password" data-login-pass required placeholder="••••••••" autocomplete="current-password" />
+              </label>
+              <button type="submit" class="admin__save" data-login-btn>Entrar</button>
+              <p class="admin__msg" data-login-msg></p>
+            </form>
+            <p class="admin__login-foot">Se usa tu cuenta de Supabase (la misma de Ahorrandy).</p>
+          </div>
+        </div>
+
+        <!-- Estado: panel (autenticada) -->
+        <div class="admin__panel" data-admin-panel hidden>
+          <div class="admin__topbar">
+            <span class="admin__who" data-admin-who></span>
+            <button class="admin__logout" data-admin-logout>Cerrar sesión</button>
+          </div>
+          <div class="admin__cols">
+            <form class="admin__form" data-admin-form>
+              <h3>Cargar / editar obra</h3>
+              <input type="hidden" data-f-id />
+              <label>Título<input type="text" data-f-title required placeholder="Ej: Design System" /></label>
+              <label>Descripción<textarea data-f-desc rows="3" placeholder="Contá de qué se trata…"></textarea></label>
+              <label>Tags (separados por coma)<input type="text" data-f-tags placeholder="UX, Figma, Branding" /></label>
+              <label class="admin__file">Imágenes (podés elegir varias)
+                <input type="file" data-f-images accept="image/*" multiple />
+              </label>
+              <div class="admin__thumbs" data-f-thumbs></div>
+              <div class="admin__actions">
+                <button type="submit" class="admin__save" data-admin-save>Guardar obra</button>
+                <button type="button" class="admin__reset" data-admin-reset>Limpiar</button>
+              </div>
+              <p class="admin__msg" data-admin-msg></p>
+            </form>
+            <div class="admin__side">
+              <h3>Obras publicadas</h3>
+              <div class="admin__items" data-admin-items></div>
+              <p class="admin__hint">Los cambios se guardan en la nube y se publican al instante para todos. 🚀</p>
             </div>
           </div>
         </div>
+
       </div>
     </template>
 
@@ -253,6 +296,9 @@
       <button class="dock__app" data-open="contacto" data-tip="Contacto">
         <span class="dock__icon icon-mail"></span>
       </button>
+      <a class="dock__app" href="https://ahorrandy.vercel.app" target="_blank" rel="noopener" data-tip="Ahorrandy — abrir la app">
+        <span class="dock__icon icon-ahorrandy"></span>
+      </a>
       <span class="dock__sep"></span>
       <a class="dock__app" href="https://linkedin.com/in/andreamariange" target="_blank" rel="noopener" data-tip="LinkedIn">
         <span class="dock__icon icon-linkedin"></span>
@@ -268,6 +314,9 @@
 
   </main>
 
+  <!-- Supabase (galería en la nube + login del backoffice) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase-config.js"></script>
   <script src="js/data.js"></script>
   <script src="js/gallery.js"></script>
   <script src="js/main.js"></script>
