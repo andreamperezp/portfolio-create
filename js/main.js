@@ -38,7 +38,7 @@
 
   /* ---------- WINDOW MANAGER ---------- */
   const WIN = {
-    acerca:      { title: "Acerca de Andrea", tpl: "tpl-acerca", w: 560, h: 560, build: buildAbout },
+    acerca:      { title: "Acerca de Andrea", tpl: "tpl-acerca", w: 940, h: 600, build: buildAbout },
     experiencia: { title: "Experiencia — Trayectoria", tpl: "tpl-experiencia", w: 620, h: 560, build: buildTimeline },
     skills:      { title: "Skills — Competencias", tpl: "tpl-skills", w: 560, h: 580, build: buildSkills },
     galeria:     { title: "Galería de trabajos", tpl: "tpl-galeria", w: 760, h: 580, build: buildGallery },
@@ -164,15 +164,45 @@
     window.addEventListener("mouseup", () => { dragging = false; document.body.style.userSelect = ""; });
   }
 
-  /* ---------- BUILDERS: ABOUT ---------- */
+  /* ---------- BUILDERS: ABOUT (poster) ---------- */
   function buildAbout(body) {
-    const chips = $("[data-chips]", body);
-    D.keywords.forEach((k) => {
-      const c = document.createElement("span");
-      c.className = "chip";
-      c.textContent = k;
-      chips.appendChild(c);
-    });
+    // Skills como pills
+    const sk = $("[data-abx-skills]", body);
+    if (sk) {
+      (D.skills || []).forEach((s) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span>${s.icon || "✦"}</span>${s.label}`;
+        sk.appendChild(li);
+      });
+    }
+
+    // Badges de portfolio / links
+    const bd = $("[data-abx-badges]", body);
+    if (bd) {
+      const badges = [
+        { t: "LinkedIn ↗", href: D.meta.linkedin, ext: true },
+        { t: "Web ↗", href: D.meta.web, ext: true, ghost: true },
+        { t: "Descargar CV ↓", href: D.meta.cv, dl: true, ghost: true },
+      ];
+      badges.forEach((b) => {
+        const a = document.createElement("a");
+        a.className = "abx__badge" + (b.ghost ? " is-ghost" : "");
+        a.href = b.href;
+        a.textContent = b.t;
+        if (b.ext) { a.target = "_blank"; a.rel = "noopener"; }
+        if (b.dl) { a.target = "_blank"; a.setAttribute("download", ""); }
+        bd.appendChild(a);
+      });
+    }
+
+    // Barra de contacto
+    const ct = $("[data-abx-contact]", body);
+    if (ct) {
+      ct.innerHTML =
+        `<span><i>✉</i> ${D.meta.email}</span>` +
+        `<span><i>☎</i> ${D.meta.phone}</span>` +
+        `<span><i>◍</i> ${D.meta.location}</span>`;
+    }
   }
 
   /* ---------- BUILDERS: TIMELINE ---------- */

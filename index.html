@@ -105,29 +105,42 @@
 
     <!-- Templates for window content -->
     <template id="tpl-acerca">
-      <div class="about">
-        <div class="about__hero">
-          <div class="about__avatar">AP</div>
-          <div>
-            <h1>Andrea Pérez</h1>
-            <p class="about__role">Product Designer · Product Manager · Project Manager</p>
-            <p class="about__tag">“No hago cosas increíbles. Solo optimizo procesos.”</p>
-          </div>
+      <div class="abx">
+        <img class="abx__photo" src="assets/andrea-portrait.jpg" alt="Andrea Pérez"
+             onerror="this.onerror=null;this.src='assets/portrait-placeholder.svg'" />
+        <div class="abx__scrim"></div>
+        <span class="abx__edge">Product Designer</span>
+
+        <div class="abx__inner">
+          <header class="abx__head">
+            <span class="abx__kicker">✦ Acerca de mí</span>
+            <h1 class="abx__name">Andrea<span>Pérez</span></h1>
+            <p class="abx__role">Product Designer · Product Manager · Project Manager</p>
+          </header>
+
+          <section class="abx__block abx__dna">
+            <h3 class="abx__h">Creative DNA</h3>
+            <div class="abx__stats">
+              <div><b>5+</b><span>años liderando</span></div>
+              <div><b>4</b><span>equipos &amp; países</span></div>
+              <div><b>IA</b><span>+ automatización</span></div>
+            </div>
+            <p class="abx__bio">
+              Directora de producto y tecnología. Lidero equipos multidisciplinarios de diseño,
+              desarrollo y producto, alineando la estrategia de negocio con la experiencia del
+              usuario. Optimizo procesos con metodologías ágiles e integración de agentes de IA.
+            </p>
+            <p class="abx__tag">“No hago cosas increíbles. Solo optimizo procesos.”</p>
+          </section>
+
+          <section class="abx__block abx__skills">
+            <h3 class="abx__h">Skills</h3>
+            <ul class="abx__skilllist" data-abx-skills></ul>
+          </section>
+
+          <div class="abx__badges" data-abx-badges></div>
+          <footer class="abx__contact" data-abx-contact></footer>
         </div>
-        <p class="about__bio">
-          Directora de producto y tecnología con más de <strong>5 años</strong> liderando equipos
-          multidisciplinarios de diseño, desarrollo y producto. Especializada en gestión ágil,
-          diseño de interfaces intuitivas y dirección técnica de soluciones digitales. Alineo la
-          estrategia de negocio con la experiencia del usuario y optimizo procesos mediante
-          metodologías ágiles y la integración de agentes de IA.
-        </p>
-        <div class="about__specs">
-          <div><span>Ubicación</span><strong>La Plata, Buenos Aires 🇦🇷</strong></div>
-          <div><span>Experiencia</span><strong>5+ años</strong></div>
-          <div><span>Idiomas</span><strong>Español (nativo) · Inglés</strong></div>
-          <div><span>Estado</span><strong>Disponible para proyectos</strong></div>
-        </div>
-        <div class="chips" data-chips></div>
       </div>
     </template>
 
