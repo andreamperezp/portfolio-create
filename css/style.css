@@ -171,10 +171,13 @@ button, a { font-family: inherit; color: inherit; cursor: pointer; }
 /* ============================================================
    WINDOWS
    ============================================================ */
-.windows-layer { position: absolute; inset: 0; z-index: 20; }
+/* La capa de ventanas cubre toda la pantalla pero NO debe capturar clicks
+   en zonas vacías (si no, bloquea íconos del escritorio y el widget promo). */
+.windows-layer { position: absolute; inset: 0; z-index: 20; pointer-events: none; }
 
 .window {
   position: absolute;
+  pointer-events: auto;
   min-width: 320px;
   border-radius: var(--radius);
   background: var(--glass);
