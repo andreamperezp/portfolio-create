@@ -81,7 +81,8 @@
         </div>
         <span class="window__title">${cfg.title}</span>
       </div>
-      <div class="window__body"></div>`;
+      <div class="window__body"></div>
+      <span class="window__resize" title="Arrastrá para redimensionar" aria-hidden="true"></span>`;
 
     const body = $(".window__body", win);
     body.appendChild($("#" + cfg.tpl).content.cloneNode(true));
@@ -94,6 +95,7 @@
     markDock();
 
     makeDraggable(win);
+    makeResizable(win);
     const bar = $(".window__bar", win);
     $(".traffic .c", win).addEventListener("click", (e) => { e.stopPropagation(); closeWindow(key); });
     $(".traffic .m", win).addEventListener("click", (e) => { e.stopPropagation(); minimizeWindow(key); });
@@ -162,6 +164,40 @@
       win.style.top = Math.max(34, oy + e.clientY - sy) + "px";
     });
     window.addEventListener("mouseup", () => { dragging = false; document.body.style.userSelect = ""; });
+  }
+
+  /* ---------- RESIZE (arrastrar esquina inferior derecha) ---------- */
+  function makeResizable(win) {
+    const handle = $(".window__resize", win);
+    if (!handle) return;
+    let sx, sy, sw, sh, resizing = false;
+
+    const start = (e) => {
+      if (isMobile() || win.classList.contains("is-max")) return;
+      e.preventDefault(); e.stopPropagation();
+      resizing = true;
+      const p = e.touches ? e.touches[0] : e;
+      sx = p.clientX; sy = p.clientY;
+      sw = win.offsetWidth; sh = win.offsetHeight;
+      document.body.style.userSelect = "none";
+      focusWindow(win.dataset.key);
+    };
+    const move = (e) => {
+      if (!resizing) return;
+      const p = e.touches ? e.touches[0] : e;
+      const maxW = window.innerWidth - win.offsetLeft - 12;
+      const maxH = window.innerHeight - win.offsetTop - 12;
+      win.style.width = Math.max(320, Math.min(maxW, sw + p.clientX - sx)) + "px";
+      win.style.height = Math.max(240, Math.min(maxH, sh + p.clientY - sy)) + "px";
+    };
+    const end = () => { resizing = false; document.body.style.userSelect = ""; };
+
+    handle.addEventListener("mousedown", start);
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", end);
+    handle.addEventListener("touchstart", start, { passive: false });
+    window.addEventListener("touchmove", move, { passive: false });
+    window.addEventListener("touchend", end);
   }
 
   /* ---------- BUILDERS: ABOUT (poster) ---------- */

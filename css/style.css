@@ -220,6 +220,18 @@ button, a { font-family: inherit; color: inherit; cursor: pointer; }
   background: rgba(255, 255, 255, 0.16); border-radius: 99px;
 }
 
+/* Handle para redimensionar (esquina inferior derecha) */
+.window__resize {
+  position: absolute; right: 3px; bottom: 3px; width: 20px; height: 20px;
+  cursor: nwse-resize; z-index: 8; border-radius: 0 0 12px 0;
+  background:
+    linear-gradient(135deg, transparent 0 46%, rgba(255,255,255,0.32) 46% 54%, transparent 54% 66%, rgba(255,255,255,0.32) 66% 74%, transparent 74%);
+  opacity: 0.55; transition: opacity 0.15s;
+}
+.window__resize:hover { opacity: 1; }
+.window.is-max .window__resize { display: none; }
+@media (max-width: 720px) { .window__resize { display: none; } }
+
 /* Focus state */
 .window.is-front { box-shadow: var(--shadow), 0 0 0 1px rgba(139,123,255,0.3); }
 
