@@ -1,0 +1,90 @@
+/* CV · Andrea Pérez — estilos compartidos ES/EN.
+   Pensado para ATS: una sola columna, texto real, encabezados estándar, sin tablas ni cuadros de texto. */
+@font-face { font-family: Manrope; font-weight: 200 800; src: url("../assets/fonts/manrope-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: Manrope; font-weight: 200 800; src: url("../assets/fonts/manrope-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+
+:root {
+  --ink: #1E2430;
+  --ink-2: #4A5160;
+  --line: #DCDDE0;
+  --coral: #B4553A;
+  --peach: #F4B39A;
+  --mint: #A9DCC0;
+  --cream: #F7F5F1;
+}
+@page { size: A4; margin: 12mm 14mm 12mm; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; font-family: Manrope, Arial, sans-serif; color: var(--ink); font-size: 9.4pt; line-height: 1.45; background: #fff; }
+a { color: inherit; text-decoration: none; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+
+/* Encabezado */
+.hero {
+  display: flex; align-items: center; gap: 7mm;
+  padding: 6mm 8mm; border-radius: 5mm;
+  background: linear-gradient(120deg, #FBE3D8 0%, var(--cream) 45%, #E3F2EA 100%);
+}
+.hero-text { flex: 1; min-width: 0; }
+.kicker { font-size: 8pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--coral); }
+h1 { margin: 1mm 0 0; font-size: 27pt; line-height: 1.05; letter-spacing: -0.01em; word-spacing: 0.05em; font-weight: 800; }
+.headline { margin-top: 1.5mm; font-size: 11pt; font-weight: 700; }
+.subline { margin-top: 0.5mm; font-size: 9pt; color: var(--ink-2); }
+.contact { margin-top: 3.5mm; display: flex; flex-wrap: wrap; gap: 1mm 4mm; font-size: 8.4pt; }
+.contact span b { font-weight: 700; color: var(--coral); margin-right: 1mm; }
+.photo {
+  flex: 0 0 33mm; width: 33mm; height: 33mm; border-radius: 50%; padding: 1.3mm;
+  background: linear-gradient(135deg, var(--peach), var(--mint));
+}
+.photo img { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1mm solid #fff; }
+
+/* Secciones */
+section { margin-top: 4.6mm; }
+h2 {
+  display: flex; align-items: center; gap: 2.5mm; margin: 0 0 2.2mm;
+  font-size: 9pt; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase;
+}
+h2::after { content: ""; flex: 1; height: 0.3mm; background: var(--line); }
+h2 .n {
+  display: inline-grid; place-items: center; width: 6mm; height: 6mm; border-radius: 50%;
+  background: var(--ink); color: var(--cream); font-size: 7pt; letter-spacing: 0;
+}
+.summary { font-size: 9.6pt; line-height: 1.55; }
+
+/* Competencias (palabras clave) */
+.chips { display: flex; flex-wrap: wrap; gap: 1.6mm; }
+.chips li { padding: 0.9mm 2.6mm; border-radius: 99px; font-size: 8.3pt; font-weight: 600; background: var(--cream); border: 0.25mm solid var(--line); }
+.chips li.hl { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+/* Experiencia — sin position, para que el orden de lectura del PDF siga el orden visual */
+.jobs { margin-left: 1.3mm; padding-left: 4mm; border-left: 0.4mm solid var(--peach); }
+.job-head, .org { break-after: avoid; }
+.bullets li, .rows li { break-inside: avoid; }
+.job + .job { margin-top: 3.2mm; }
+.job-head {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 4mm;
+  margin-left: -5.75mm;
+}
+.job-head h3::before {
+  content: ""; display: inline-block; vertical-align: 0.1mm; width: 2.2mm; height: 2.2mm; margin-right: 2.2mm;
+  border-radius: 50%; border: 0.55mm solid var(--coral); background: #fff;
+}
+.job.current .job-head h3::before { background: var(--coral); }
+h3 { margin: 0; font-size: 10.4pt; font-weight: 800; letter-spacing: -0.01em; }
+.dates { flex: 0 0 auto; font-size: 8.4pt; font-weight: 600; color: var(--coral); }
+.org { font-size: 8.8pt; color: var(--ink-2); font-weight: 600; margin-bottom: 1mm; }
+.bullets { padding-left: 3.6mm; list-style: disc; }
+.bullets li { margin-top: 0.4mm; padding-left: 0.4mm; }
+.bullets li::marker { color: var(--coral); }
+
+/* Proyectos */
+.projects li { break-inside: avoid; padding: 1.4mm 0; border-bottom: 0.25mm solid var(--line); }
+.projects li:last-child { border-bottom: 0; }
+.projects .pt { font-weight: 800; }
+.projects .pm { font-size: 8.2pt; font-weight: 600; color: var(--coral); }
+
+/* Listas compactas */
+.rows li { padding: 0.4mm 0; }
+.rows b { font-weight: 800; }
+.muted { color: var(--ink-2); }
